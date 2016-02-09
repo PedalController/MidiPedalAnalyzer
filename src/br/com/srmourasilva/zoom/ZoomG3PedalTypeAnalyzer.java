@@ -1,8 +1,5 @@
 package br.com.srmourasilva.zoom;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import br.com.srmourasilva.analizer.Analyzable;
 import br.com.srmourasilva.analizer.Causes;
 import br.com.srmourasilva.domain.message.CommonCause;
