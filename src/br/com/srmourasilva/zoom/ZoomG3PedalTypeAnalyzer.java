@@ -4,8 +4,10 @@ import br.com.srmourasilva.analizer.Analyzable;
 import br.com.srmourasilva.analizer.Causes;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
-import br.com.srmourasilva.domain.message.Messages.Message;
+import br.com.srmourasilva.domain.message.Message;
 import br.com.srmourasilva.domain.message.MidiMessages;
+import br.com.srmourasilva.domain.message.multistomp.MultistompDetails;
+import br.com.srmourasilva.domain.message.multistomp.MultistompMessage;
 import br.com.srmourasilva.multistomp.connection.codification.MessageEncoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesCause;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessageEncoder;
@@ -24,9 +26,9 @@ public class ZoomG3PedalTypeAnalyzer implements Analyzable {
 
 	@Override
 	public MidiMessages start() {
-		Messages messages = Messages.Empty();
-		messages.concatWith(ZoomGSeriesMessages.LISSEN_ME());
-		messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
+		Messages messages = Messages.Empty()
+				.add(ZoomGSeriesMessages.LISSEN_ME())
+				.add(ZoomGSeriesMessages.YOU_CAN_TALK());
 		
 		return encoder.encode(messages);
 	}
@@ -38,10 +40,12 @@ public class ZoomG3PedalTypeAnalyzer implements Analyzable {
 
 	@Override
 	public MidiMessages initialize() {
-		Message toPatch7 = new Message(CommonCause.TO_PATCH);
-		toPatch7.details().patch = patchTest;
-
-		return encoder.encode(Messages.For(toPatch7)).concatWith(setEffect(0, 0));
+		MultistompDetails details = new MultistompDetails();
+		details.patch = patchTest;
+		
+		Message toPatch = new MultistompMessage(CommonCause.TO_PATCH, details);
+		
+		return encoder.encode(Messages.For(toPatch)).concatWith(setEffect(0, 0));
 	}
 
 	@Override
@@ -84,9 +88,11 @@ public class ZoomG3PedalTypeAnalyzer implements Analyzable {
 		Message setEffect;
 		Messages cleanParams;
 
-		setEffect = new Message(CommonCause.EFFECT_TYPE);
-		setEffect.details().effect = effect;
-		setEffect.details().value = typeEffect;
+		MultistompDetails details = new MultistompDetails();
+		details.effect = effect;
+		details.value = typeEffect;
+
+		setEffect = new MultistompMessage(CommonCause.EFFECT_TYPE, details);
 
 		cleanParams = cleanParams(effect);
 
@@ -105,12 +111,14 @@ public class ZoomG3PedalTypeAnalyzer implements Analyzable {
 	public Messages cleanParams(int effect) {
 		Messages messages = Messages.Empty();
 		for (int i = 0; i < 8; i++) {
-			Message message = new Message(CommonCause.PARAM_VALUE);
-			message.details().effect = effect;
-			message.details().param = i;
-			message.details().value = 0;
+			MultistompDetails details = new MultistompDetails();
 
-			messages.concatWith(Messages.For(message));
+			details.effect = effect;
+			details.param = i;
+			details.value = 0;
+
+			Message message = new MultistompMessage(CommonCause.PARAM_VALUE, details);
+			messages.add(message);
 		}
 		
 		return messages;
@@ -118,7 +126,7 @@ public class ZoomG3PedalTypeAnalyzer implements Analyzable {
 
 	@Override
 	public MidiMessages getCurrentStatus() {
-		Messages messages = Messages.For(new Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
+		Messages messages = Messages.For(new MultistompMessage(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS));
 
 		return encoder.encode(messages);
 	}

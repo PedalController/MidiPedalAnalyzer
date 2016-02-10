@@ -16,9 +16,9 @@ public class ZoomG3PedalObservable implements PedalObservable {
 
 	@Override
 	public MidiMessages start() {
-		Messages messages = Messages.Empty();
-		messages.concatWith(ZoomGSeriesMessages.LISSEN_ME());
-		messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
+		Messages messages = Messages.Empty()
+				.add(ZoomGSeriesMessages.LISSEN_ME())
+				.add(ZoomGSeriesMessages.YOU_CAN_TALK());
 		
 		return encoder.encode(messages);
 	}
