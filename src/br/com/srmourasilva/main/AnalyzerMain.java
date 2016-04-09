@@ -1,4 +1,4 @@
-package br.com.smourasilva.main;
+package br.com.srmourasilva.main;
 
 import javax.sound.midi.MidiUnavailableException;
 
