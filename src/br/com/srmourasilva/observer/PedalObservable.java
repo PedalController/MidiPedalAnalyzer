@@ -1,4 +1,4 @@
-package br.com.smourasilva.observer;
+package br.com.srmourasilva.observer;
 
 import br.com.srmourasilva.domain.message.MidiMessages;
 

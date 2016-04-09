@@ -1,4 +1,4 @@
-package br.com.smourasilva.observer;
+package br.com.srmourasilva.observer;
 
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;

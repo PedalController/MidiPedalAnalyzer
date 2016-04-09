@@ -1,10 +1,10 @@
 package br.com.srmourasilva.zoom;
 
-import br.com.smourasilva.observer.PedalObservable;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.MidiMessages;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessageEncoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
+import br.com.srmourasilva.observer.PedalObservable;
 
 public class ZoomG3PedalObservable implements PedalObservable {
 
